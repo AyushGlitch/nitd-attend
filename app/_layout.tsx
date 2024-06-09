@@ -19,6 +19,7 @@ import { ExpoSQLiteDatabase } from 'drizzle-orm/expo-sqlite';
 import { preDefinedTimeTable, preDefinedTimeTableInsertType, preDefinedTimeTableSelectType } from '@/db/schema';
 import { count } from 'drizzle-orm';
 import { preDefinedTimeTableData } from '@/db/seedData';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 
@@ -33,15 +34,16 @@ async function seedData(db: ExpoSQLiteDatabase) {
   try {
     const preDefinedData: Result = await db.select({count: count()}).from(preDefinedTimeTable)
   
-    if (preDefinedData[0].count != 0) {
-      console.log("Data Present")
+    if (preDefinedData[0].count == preDefinedTimeTableData.length) {
+      console.log("Updated Data Present")
     }
 
     else {
+      await db.delete(preDefinedTimeTable)
       //@ts-ignore
       const insertRes: preDefinedTimeTableInsertType = await db.insert(preDefinedTimeTable).values(preDefinedTimeTableData)
       if (insertRes) {
-        console.log("Data Seeded")
+        console.log("Updated Data Seeded")
       }
     }
     const seededData: preDefinedTimeTableSelectType[] = await db.select().from(preDefinedTimeTable)
@@ -105,8 +107,11 @@ function RootLayoutNav() {
     navigation.dispatch(DrawerActions.openDrawer())
   }
 
+  const queryClient= new QueryClient()
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <Drawer
             screenOptions={{
@@ -173,6 +178,7 @@ function RootLayoutNav() {
 
           </Drawer>
         </GestureHandlerRootView>
-    </ThemeProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
