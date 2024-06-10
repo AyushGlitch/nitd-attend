@@ -3,10 +3,10 @@ import { DarkTheme, DefaultTheme, DrawerActions, ThemeProvider } from '@react-na
 import { useFonts } from 'expo-font';
 import { Drawer } from 'expo-router/drawer';
 import 'react-native-reanimated';
-import { useColorScheme } from 'react-native';
+import { Linking, TouchableOpacity, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View } from 'react-native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import * as SplashScreen from 'expo-splash-screen';
@@ -20,6 +20,9 @@ import { preDefinedTimeTable, preDefinedTimeTableInsertType, preDefinedTimeTable
 import { count } from 'drizzle-orm';
 import { preDefinedTimeTableData } from '@/db/seedData';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Image } from 'expo-image';
+import { Text } from '@/components/Themed';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -32,6 +35,7 @@ type Result = {
 
 async function seedData(db: ExpoSQLiteDatabase) {
   try {
+    // await db.delete(preDefinedTimeTable) //
     const preDefinedData: Result = await db.select({count: count()}).from(preDefinedTimeTable)
   
     if (preDefinedData[0].count == preDefinedTimeTableData.length) {
@@ -46,6 +50,7 @@ async function seedData(db: ExpoSQLiteDatabase) {
         console.log("Updated Data Seeded")
       }
     }
+    // await db.delete(preDefinedTimeTable) //
     const seededData: preDefinedTimeTableSelectType[] = await db.select().from(preDefinedTimeTable)
     console.log("Data Present of Length", seededData.length)
 
@@ -90,11 +95,35 @@ export default function RootLayout() {
 
 
 function CustomDrawerContent(props: any) {
+  const {top, bottom} = useSafeAreaInsets()
+
   return (    
-    <DrawerContentScrollView {...props} scrollEnabled={false}>
-      <View style={{backgroundColor: '#021520', height: 150}} />
-      <DrawerItemList {...props} />
-    </DrawerContentScrollView>     
+    <View style={{flex:1}}>
+      <DrawerContentScrollView {...props} scrollEnabled={false}>
+        <View style={{backgroundColor: '#021520', height: 150, flex:1, justifyContent:'center', alignItems:'center'}}>
+          <Image source={require("../assets/images/adaptive-icon.png")} style={{width:'100%', flex:1}} />
+        </View>
+        
+        <View style={{marginVertical:30}}>
+          <DrawerItemList {...props} />
+        </View>
+      </DrawerContentScrollView>  
+
+      <View style={{ borderTopWidth: 2, borderTopColor: '#414141', paddingVertical: bottom + 20, paddingLeft:20, gap:17}}>
+        <TouchableOpacity style={{flexWrap:'wrap', flexDirection:'row', gap:20, alignItems:'center'}}  onPress={() => Linking.openURL('https://github.com/AyushGlitch/nitd-attend')}>
+          <AntDesign name="github" size={30} color="grey" />
+          <Text style={{ fontSize: 17, fontWeight:'500', marginBottom: 10 }}>GitHub</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexWrap:'wrap', flexDirection:'row', gap:20, alignItems:'center'}} onPress={() => Linking.openURL('https://www.linkedin.com/in/ayush-aryan-singh-877989204/')}>
+          <AntDesign name="linkedin-square" size={30} color="grey" />
+          <Text style={{ fontSize: 17, fontWeight:'500', marginBottom: 10 }}>LinkedIn</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexWrap:'wrap', flexDirection:'row', gap:20, alignItems:'center'}} onPress={() => Linking.openURL('https://x.com/AyushAryanSgh')}>
+          <FontAwesome6 name="square-x-twitter" size={30} color="grey" />
+          <Text style={{ fontSize: 17, fontWeight:'500', marginBottom: 10 }}>Twitter</Text>
+        </TouchableOpacity>
+      </View>  
+    </View>
   )
 } 
 
@@ -175,7 +204,7 @@ function RootLayoutNav() {
                 )
               }}
             />
-
+            
           </Drawer>
         </GestureHandlerRootView>
       </ThemeProvider>

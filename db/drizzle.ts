@@ -1,6 +1,12 @@
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { openDatabaseSync } from "expo-sqlite/next";
+import { deleteDatabaseAsync, openDatabaseSync } from "expo-sqlite/next";
 
-const expo = openDatabaseSync("db.db");
+let expo = openDatabaseSync("db.db");
+
+// if (expo) {
+//     deleteDatabaseAsync("db.db")
+//     console.log("Database Deleted")
+//     expo = openDatabaseSync("db.db")
+// }
 
 export const db = drizzle(expo);

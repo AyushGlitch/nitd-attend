@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "1159599b-f428-455f-a5dd-5073b66850a9",
+  "id": "e8991d41-6123-4bba-9cae-161b37b0fdbd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "preDefinedTimeTable": {
