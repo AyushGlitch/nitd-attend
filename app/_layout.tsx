@@ -3,7 +3,7 @@ import { DarkTheme, DefaultTheme, DrawerActions, ThemeProvider } from '@react-na
 import { useFonts } from 'expo-font';
 import { Drawer } from 'expo-router/drawer';
 import 'react-native-reanimated';
-import { Linking, TouchableOpacity, useColorScheme } from 'react-native';
+import { Linking, Platform, TouchableOpacity, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View } from 'react-native';
 import { AntDesign, FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -14,7 +14,6 @@ import { useEffect } from 'react';
 import { db } from '@/db/drizzle';
 import migrations from '@/db/migrations/migrations'
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
 import { ExpoSQLiteDatabase } from 'drizzle-orm/expo-sqlite';
 import { preDefinedTimeTable, preDefinedTimeTableInsertType, preDefinedTimeTableSelectType } from '@/db/schema';
 import { count } from 'drizzle-orm';
@@ -23,6 +22,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { Text } from '@/components/Themed';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import NotificationBell from '@/components/NotificationBell';
+import * as Notifications from "expo-notifications"
+import * as Device from "expo-device"
 
 
 
@@ -39,7 +41,7 @@ async function seedData(db: ExpoSQLiteDatabase) {
     const preDefinedData: Result = await db.select({count: count()}).from(preDefinedTimeTable)
   
     if (preDefinedData[0].count == preDefinedTimeTableData.length) {
-      // console.log("Updated Data Present")
+      console.log("Updated Data Present")
     }
 
     else {
@@ -47,7 +49,7 @@ async function seedData(db: ExpoSQLiteDatabase) {
       //@ts-ignore
       const insertRes: preDefinedTimeTableInsertType = await db.insert(preDefinedTimeTable).values(preDefinedTimeTableData)
       if (insertRes) {
-        // console.log("Updated Data Seeded")
+        console.log("Updated Data Seeded")
       }
     }
     // await db.delete(preDefinedTimeTable) //
@@ -55,7 +57,7 @@ async function seedData(db: ExpoSQLiteDatabase) {
     // console.log("Data Present of Length", seededData.length)
 
   } catch (error) {
-    // console.log('Error seeding data', error)
+    console.log('Error seeding data', error)
   }
 }
 
@@ -73,18 +75,52 @@ export default function RootLayout() {
   useEffect(() => {
     if (error || err) 
       throw error || err;
+
   }, [error, err]);
 
   useEffect(() => {
     if (loaded) {
       // SplashScreen.hideAsync();
       if (success) {
-        // console.log('Migrations ran successfully')
+        console.log('Migrations ran successfully')
         seedData(db).then( () => { () => SplashScreen.hideAsync() } )
       }
     }
     
   }, [loaded, success]);
+
+  useEffect( () => {
+    const setupForNotifications = async () => {
+      if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('daily-reminder', {
+          name: 'daily-reminder',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      }
+
+      if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync()
+        let finalStatus = existingStatus
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync()
+          finalStatus = status
+        }
+
+        if (finalStatus !== 'granted') {
+          alert('Failed to get push token for push notification!')
+          return
+        }
+      }
+      else {
+        alert('Must use physical device for Push Notifications');
+      }
+    };
+  
+    setupForNotifications();
+    
+  }, [] )
 
   if (!loaded) {
     return null;
@@ -150,6 +186,9 @@ function RootLayoutNav() {
                   paddingHorizontal: 20,
                 }}
                 />
+              ),
+              headerRight: () => (
+                <NotificationBell />
               ),
               drawerStyle: {
                 width: 200
