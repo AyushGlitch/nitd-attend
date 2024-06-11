@@ -30,4 +30,4 @@ It's like JavaScript with superpowers. Catches errors before they happen and mak
 
 Now, I won't lie – NITD-Attend isn't winning any beauty pageants. But hey, it's clean, simple, and gets the job done! Who needs flashy when you've got functionality, right? 😉
 
-The coolest part? This app is open-source on GitHub! 🎉 That means all my NIT Delhi peeps can jump in, add your magic, and make it even better. Together, we can turn this from just an attendance tracker to something epic for our college community. So, whatcha waiting for? Let's code and conquer! 💻🚀
+The coolest part? This app is open-source! 🎉 That means all my NIT Delhi peeps can jump in, add your magic, and make it even better. Together, we can turn this from just an attendance tracker to something epic for our college community. So, whatcha waiting for? Let's code and conquer! 💻🚀
