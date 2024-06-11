@@ -35,6 +35,15 @@ type Result = {
 }[];
 
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+
 async function seedData(db: ExpoSQLiteDatabase) {
   try {
     // await db.delete(preDefinedTimeTable) //
@@ -89,7 +98,7 @@ export default function RootLayout() {
     
   }, [loaded, success]);
 
-  useEffect( () => {
+  useEffect( () => {    
     const setupForNotifications = async () => {
       if (Platform.OS === 'android') {
         await Notifications.setNotificationChannelAsync('daily-reminder', {
