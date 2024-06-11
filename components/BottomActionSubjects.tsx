@@ -27,6 +27,9 @@ export default function BottomActionSubjects ({degreeId, branchId, semester}: Bo
 
     const addCourse= useAddCourse()
     const handleAddCourse = (courseId: string) => {
+        if (courseId.length === 0) 
+            return alert('Please enter a valid course name')
+        
         const data: AddCourseProps= {degreeId: degreeId!, branchId: branchId!, semester: semester!, courseId: courseId}
         addCourse.mutate(data)
         setIsAddModalVisible(false)

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { addAbsentPresent, addCourse, deleteAllCourse, deleteCourse, resetCourse, submitPredefinedTTForm, undoAttendance } from "./api"
+import { addAbsentPresent, addCourse, deleteAllCourse, deleteCourse, editCourseId, resetCourse, submitPredefinedTTForm, undoAttendance } from "./api"
 
 
 export interface submitPredefinedTTFormProps {
@@ -146,6 +146,31 @@ export const useUndoAttendance = () => {
                 console.log("Error while undoing the attendance: ", error)
             }
             else {
+                await queryClient.invalidateQueries({queryKey: ['getUserAttendance']})
+                await queryClient.invalidateQueries({queryKey: ['getAttendanceDate']})
+            }
+        }
+    })
+}
+
+
+export interface EditCourseIdProps {
+    courseId: string,
+    newCourseId: string
+}
+
+
+export const useEditCourseId= () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (data: EditCourseIdProps) => editCourseId(data),
+        onSettled: async (_, error) => {
+            if (error) {
+                console.log("Error while editing the course id: ", error)
+            }
+            else {
+                await queryClient.invalidateQueries({queryKey: ['getUserTT']})
                 await queryClient.invalidateQueries({queryKey: ['getUserAttendance']})
                 await queryClient.invalidateQueries({queryKey: ['getAttendanceDate']})
             }

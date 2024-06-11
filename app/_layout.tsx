@@ -39,7 +39,7 @@ async function seedData(db: ExpoSQLiteDatabase) {
     const preDefinedData: Result = await db.select({count: count()}).from(preDefinedTimeTable)
   
     if (preDefinedData[0].count == preDefinedTimeTableData.length) {
-      console.log("Updated Data Present")
+      // console.log("Updated Data Present")
     }
 
     else {
@@ -47,15 +47,15 @@ async function seedData(db: ExpoSQLiteDatabase) {
       //@ts-ignore
       const insertRes: preDefinedTimeTableInsertType = await db.insert(preDefinedTimeTable).values(preDefinedTimeTableData)
       if (insertRes) {
-        console.log("Updated Data Seeded")
+        // console.log("Updated Data Seeded")
       }
     }
     // await db.delete(preDefinedTimeTable) //
     const seededData: preDefinedTimeTableSelectType[] = await db.select().from(preDefinedTimeTable)
-    console.log("Data Present of Length", seededData.length)
+    // console.log("Data Present of Length", seededData.length)
 
   } catch (error) {
-    console.log('Error seeding data', error)
+    // console.log('Error seeding data', error)
   }
 }
 
@@ -79,7 +79,7 @@ export default function RootLayout() {
     if (loaded) {
       // SplashScreen.hideAsync();
       if (success) {
-        console.log('Migrations ran successfully')
+        // console.log('Migrations ran successfully')
         seedData(db).then( () => { () => SplashScreen.hideAsync() } )
       }
     }

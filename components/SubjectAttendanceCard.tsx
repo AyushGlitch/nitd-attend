@@ -61,7 +61,7 @@ export default function SubjectAttendanceCard({courseId, courseData}: SubjectAtt
             </View>
 
             <View style={{flex:1, justifyContent:'center', alignItems:'flex-end', margin:12, backgroundColor: 'transparent'}}>
-                <CircularProgress progress={attendPer} outerCircleColor='white' progressCircleColor='green' strokeWidth={10} labelStyle={{ fontWeight: '800' }} labelSize={15} />
+                <CircularProgress progress={attendPer} outerCircleColor='white' progressCircleColor={(attendPer < 75 && courseData.totalClasses > 0) ? 'red' : 'green'} strokeWidth={10} labelStyle={{ fontWeight: '800' }} labelSize={15} />
             </View>
         </View>
     )

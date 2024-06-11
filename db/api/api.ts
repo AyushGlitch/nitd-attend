@@ -1,7 +1,7 @@
 import { and, desc, eq } from "drizzle-orm"
 import { db } from "../drizzle"
 import { preDefinedTimeTable, preDefinedTimeTableSelectType, userAttendance, userAttendanceSelectType, userTimeTable, userTimeTableSelectType } from "../schema"
-import { AddAbsentPresentProps, AddCourseProps, submitPredefinedTTFormProps } from "./mutations"
+import { AddAbsentPresentProps, AddCourseProps, EditCourseIdProps, submitPredefinedTTFormProps } from "./mutations"
 
 
 export const getUserTT = async () => {
@@ -145,4 +145,12 @@ export const undoAttendance= async (courseId: string) => {
     const latestRow= await db.select().from(userAttendance).where(eq(userAttendance.courseId, courseId)).orderBy(desc(userAttendance.createdAt)).limit(1)
 
     await db.delete(userAttendance).where(and(eq(userAttendance.courseId, courseId), eq(userAttendance.createdAt, latestRow[0].createdAt)))
+}
+
+
+export const editCourseId= async (data: EditCourseIdProps) => {
+    const updateTT= await db.update(userTimeTable).set({courseId: data.newCourseId}).where(eq(userTimeTable.courseId, data.courseId)).returning()
+    const updateAtt= await db.update(userAttendance).set({courseId: data.newCourseId}).where(eq(userAttendance.courseId, data.courseId)).returning()
+
+    console.log(updateTT, updateAtt)
 }
