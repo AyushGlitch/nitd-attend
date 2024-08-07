@@ -31,12 +31,12 @@ export default function SubjectAttendanceCard({courseId, courseData}: SubjectAtt
 
 
     return (
-        <View style={{flexWrap:'wrap', flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'93%', borderRadius:24, backgroundColor:'#282928', position:'relative'}}>
+        <View style={{flexWrap:'wrap', flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'93%', borderRadius:24, backgroundColor:'#282928', position:'relative', shadowColor: (attendPer <75 && courseData.totalClasses> 0) ? 'red' : '#50C878', shadowOpacity: 0.7, shadowRadius: 6, shadowOffset: {width: 0, height: 4}, elevation: 10}}>
 
             <View style={{
                     marginLeft: 5, 
                     width: 8,
-                    backgroundColor: (attendPer <75 && courseData.totalClasses > 0) ?'red' :'green',
+                    backgroundColor: (attendPer <75 && courseData.totalClasses > 0) ?'red' :'#50C878',
                     borderRadius: 24,
                     height: '80%'
             }} />
@@ -49,7 +49,7 @@ export default function SubjectAttendanceCard({courseId, courseData}: SubjectAtt
 
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', gap: 20, alignItems: 'center', backgroundColor: 'transparent' }}>
                     <Pressable onPress={() => handleAttendance(true, courseData.courseId)}>
-                        <AntDesign name="checkcircle" size={28} color="green" />
+                        <AntDesign name="checkcircle" size={28} color="#50C790" />
                     </Pressable>
                     <Pressable onPress={() => handleAttendance(false, courseData.courseId)}>
                         <Entypo name="circle-with-cross" size={32} color="red" />

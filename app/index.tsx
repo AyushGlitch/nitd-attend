@@ -66,7 +66,7 @@ export default function Index() {
     return (
         <View style={{ flex: 1}}>
             <ScrollView>
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 30, marginTop:'7%' }}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", gap: 30, marginTop:'7%', marginBottom: '5%' }}>
                     {
                         fetchUserTTQuery.data && fetchUserTTQuery.data.length > 0 ? (
                         fetchUserTTQuery.data.map((data) => {

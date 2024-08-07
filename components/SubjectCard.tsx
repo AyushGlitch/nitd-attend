@@ -51,7 +51,7 @@ export default function SubjectCard ({courseId, courseData} : SubjectCardProps) 
 
 
     return (
-        <View style={{flex: 1, borderWidth: 4, borderColor: 'white', justifyContent: 'space-around', width: '90%', height: '15%', borderRadius: 25, backgroundColor:'#414141'}}>
+        <View style={{flex: 1, borderWidth: 4, borderColor: '#888888', justifyContent: 'space-around', width: '90%', height: '15%', borderRadius: 25, backgroundColor:'#333333', shadowColor: 'white', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.7, shadowRadius: 6, elevation: 10 }}>
             <View style={{flex: 1, justifyContent: 'center', backgroundColor:'transparent', marginTop:12, marginHorizontal:12}}>
                 <Text style={{fontWeight: '700', fontSize: 24}}>{courseId}</Text>
                 <View style={{flexWrap: 'wrap', flexDirection: 'row', gap: 12, justifyContent:'space-between', backgroundColor:'transparent'}}>
@@ -66,7 +66,10 @@ export default function SubjectCard ({courseId, courseData} : SubjectCardProps) 
 
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: 20, margin:12, backgroundColor:'transparent'}}>
                 <TouchableOpacity>
-                    <FontAwesome5 name="pen" size={24} color="white" onPress={() => setIsEditModalVisible(true)} />
+                    <FontAwesome5 name="pen" size={24} color="white" onPress={() => {
+                        setNewCourseId(courseId)
+                        setIsEditModalVisible(true)
+                    }} />
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <MaterialCommunityIcons name="restart" size={29} color="white" onPress={() => setIsRestartModalVisible(true)} />
